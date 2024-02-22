@@ -1,6 +1,7 @@
 package com.bharath.leanring.blog.socialmediablogapp.service;
 
 import com.bharath.leanring.blog.socialmediablogapp.dto.PostDto;
+import com.bharath.leanring.blog.socialmediablogapp.payload.PostResponse;
 
 import java.util.List;
 
@@ -8,7 +9,7 @@ public interface PostService {
 
     PostDto createPost(PostDto postDto);
 
-    List<PostDto> getAllPosts();
+    PostResponse getAllPosts(int pageNo, int pageSize);
 
     PostDto getPostById(Long id);
 
