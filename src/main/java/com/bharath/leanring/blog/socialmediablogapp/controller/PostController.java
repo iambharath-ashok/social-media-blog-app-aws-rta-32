@@ -1,18 +1,12 @@
 package com.bharath.leanring.blog.socialmediablogapp.controller;
 
 import com.bharath.leanring.blog.socialmediablogapp.dto.PostDto;
+import com.bharath.leanring.blog.socialmediablogapp.payload.PostResponse;
 import com.bharath.leanring.blog.socialmediablogapp.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,9 +25,13 @@ public class PostController {
     }
 
     //GET /api/posts
+    // Pagination and Sorting
     @GetMapping
-    public List<PostDto> getAllPosts() {
-       return postService.getAllPosts();
+    public PostResponse getAllPosts(
+        @RequestParam(value = "pageNo", defaultValue = "1", required = false) int pageNo,
+        @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
+    ) {
+       return postService.getAllPosts(pageNo, pageSize);
     }
 
     //GET /api/posts/{id}
