@@ -6,6 +6,7 @@ import com.bharath.leanring.blog.socialmediablogapp.exception.ResourceNotFoundEx
 import com.bharath.leanring.blog.socialmediablogapp.payload.PostResponse;
 import com.bharath.leanring.blog.socialmediablogapp.repository.PostRepository;
 import com.bharath.leanring.blog.socialmediablogapp.service.PostService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +22,9 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public PostDto createPost(PostDto postDto) {
@@ -102,19 +106,10 @@ public class PostServiceImpl implements PostService {
 
 
     private PostDto mapEntityToDto(Post post) {
-        PostDto postDto = new PostDto();
-        postDto.setId(post.getId());
-        postDto.setTitle(post.getTitle());
-        postDto.setContent(post.getContent());
-        postDto.setDescription(post.getDescription());
-        return postDto;
+        return modelMapper.map(post, PostDto.class);
     }
 
     private Post mapDtoToEntity(PostDto postDto) {
-        Post post = new Post();
-        post.setTitle(postDto.getTitle());
-        post.setContent(postDto.getContent());
-        post.setDescription(postDto.getDescription());
-        return post;
+        return modelMapper.map(postDto, Post.class);
     }
 }
