@@ -17,7 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "posts")
+@Table(name = "posts", uniqueConstraints = {@UniqueConstraint(columnNames = {"title"})})
 public class Post {
 
     @Id
