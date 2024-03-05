@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +25,9 @@ public class CommentController {
 
     // Create new Post - /api/v1/posts/{postId}/comments
     @PostMapping("/posts/{postId}/comments")
-    public ResponseEntity<CommentDto> createComment(@PathVariable("postId") long postId, @RequestBody @Valid CommentDto commentDto) {
+   // @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CommentDto> createComment(@PathVariable("postId") long postId,
+                                                    @RequestBody @Valid CommentDto commentDto) {
         CommentDto savedCommentDto = commentService.createComment(postId, commentDto);
         return new ResponseEntity<>(savedCommentDto, HttpStatus.CREATED);
     }
@@ -40,13 +43,15 @@ public class CommentController {
 
     //GET Comment By CommentId and PostId - /api/v1/posts/{postId}/comments/{id}
     @GetMapping("/posts/{postId}/comments/{id}")
-    public ResponseEntity<CommentDto> fetchCommentByPostIdAndCommentId(@PathVariable("postId") Long postId, @PathVariable("id") Long id) {
+    public ResponseEntity<CommentDto> fetchCommentByPostIdAndCommentId(@PathVariable("postId") Long postId,
+                                                                       @PathVariable("id") Long id) {
         CommentDto commentDto = commentService.getCommentByPostIdAndCommentId(postId, id);
         return new ResponseEntity<>(commentDto, HttpStatus.OK);
     }
 
     // PUT Update Comment By PostId and CommentId /api/v1/posts/{postId}/comments/{id}
     @PutMapping("/posts/{postId}/comments/{id}")
+    //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CommentDto> updateCommentByPostIdAndCommentId(@PathVariable("postId") Long postId,
                                                                         @PathVariable("id") Long id,
                                                                         @RequestBody @Valid CommentDto commentDto) {
