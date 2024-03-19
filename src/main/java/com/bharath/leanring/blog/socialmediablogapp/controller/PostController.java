@@ -1,6 +1,7 @@
 package com.bharath.leanring.blog.socialmediablogapp.controller;
 
 import com.bharath.leanring.blog.socialmediablogapp.dto.PostDto;
+import com.bharath.leanring.blog.socialmediablogapp.dto.PostDtoV2;
 import com.bharath.leanring.blog.socialmediablogapp.payload.PostResponse;
 import com.bharath.leanring.blog.socialmediablogapp.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,10 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v2/posts")
+@RequestMapping("/api")
 @Tag(
         name = "SOCIAL MEDIAL POST RESOURCE CRUD REST APIs"
 )
@@ -27,7 +29,7 @@ public class PostController {
     private PostService postService;
 
     //POST /api/posts
-    @PostMapping
+    @PostMapping("/v1/posts")
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(
@@ -45,7 +47,7 @@ public class PostController {
 
     //GET /api/posts
     // Pagination and Sorting
-    @GetMapping
+    @GetMapping("/v1/posts")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(
             summary = "Get All Posts REST API",
@@ -66,7 +68,7 @@ public class PostController {
     }
 
     //GET /api/posts/{id}
-    @GetMapping("/{id}")
+    @GetMapping(value = "/posts/{id}", produces  = "application/vnd.socialmediablog.v1+json")
     @Operation(
             summary = "Get Post By Id REST API",
             description = "Get Post By Id REST API is used to fetch single post from the database"
@@ -79,9 +81,35 @@ public class PostController {
        return ResponseEntity.ok(postService.getPostById(id));
     }
 
+    @GetMapping(value = "/posts/{id}", produces  = "application/vnd.socialmediablog.v2+json")
+    @Operation(
+            summary = "Get Post By Id REST API v2",
+            description = "Get Post By Id v2 REST API is used to fetch single post from the database"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Http Status 200 Success"
+    )
+    public ResponseEntity<PostDtoV2> getPostByIdV2(@PathVariable long id) {
+        PostDto postDtoV1 = postService.getPostById(id);
+        PostDtoV2 postDtoV2 = new PostDtoV2();
+        postDtoV2.setId(postDtoV1.getId());
+        postDtoV2.setTitle(postDtoV1.getTitle());
+        postDtoV2.setContent(postDtoV1.getContent());
+        postDtoV2.setDescription(postDtoV1.getDescription());
+        List<String> tags = new ArrayList<>();
+        tags.add("Java 21");
+        tags.add("Spring Boot");
+        tags.add("Microservices");
+
+        postDtoV2.setTags(tags);
+
+        return ResponseEntity.ok(postDtoV2);
+    }
+
     //PUT /api/posts/{id}
 
-    @PutMapping("/{id}")
+    @PutMapping("/v1/posts/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "Bear Authentication")
     @Operation(
@@ -98,7 +126,7 @@ public class PostController {
     }
 
     //DELETE ///api/posts/{id}
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/v1/posts/{id}")
     @Operation(
             summary = "Delete Post REST API",
             description = "Delete Post REST API is used delete a particular post in the database"
