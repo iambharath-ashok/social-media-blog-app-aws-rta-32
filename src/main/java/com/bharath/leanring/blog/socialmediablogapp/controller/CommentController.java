@@ -5,6 +5,7 @@ import com.bharath.leanring.blog.socialmediablogapp.dto.PatchDto;
 import com.bharath.leanring.blog.socialmediablogapp.entity.Comment;
 import com.bharath.leanring.blog.socialmediablogapp.service.CommentService;
 import com.github.fge.jsonpatch.JsonPatch;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
+@Tag(
+        name = "SOCIAL MEDIAL COMMENT RESOURCE CRUD REST APIs"
+)
 public class CommentController {
 
 
